@@ -8,7 +8,7 @@ RUN echo '@edge http://dl-cdn.alpinelinux.org/alpine/edge/main' >> /etc/apk/repo
 
 RUN apk --no-cache add --upgrade apk-tools@edge; \
     # Install openrc
-    apk --no-cache add openrc \
+    apk --no-cache add openrc syslog-ng \
     # can't get ttys unless you run the container in privileged mode
     && sed -i '/tty/d' /etc/inittab \
     && sed -i \
@@ -36,5 +36,8 @@ RUN apk --no-cache add --upgrade apk-tools@edge; \
             /etc/init.d/modules \
             /etc/init.d/modules-load \
             /etc/init.d/modloop
+
+ADD syslog-ng.conf /etc/syslog-ng/syslog-ng.conf
+RUN rc-update add syslog-ng
 
 CMD ["/sbin/init"]
